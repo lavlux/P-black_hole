@@ -4,11 +4,13 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/msys64/mingw64/include",
-                "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.8/include"
+                "C:/Users/MB/Coding projects/OpenGL/glew-2.3.1/include",
+                "C:/Users/MB/Coding projects/OpenGL/glfw-3.4.bin.WIN64/include",
+                "C:/Users/MB/Coding projects/OpenGL/glm",
+                "${default}"
             ],
-            "defines": [],
-            "compilerPath": "C:/msys64/mingw64/bin/g++.exe",
+            "defines": ["GLEW_STATIC"],
+            "compilerPath": "C:/mingw64/bin/g++.exe", 
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64"
