@@ -313,6 +313,10 @@ void raytrace(vector<unsigned char>& pixels, int W, int H) {
     float aspect = float(W) / float(H);
     float tanHalfFov = tan(radians(camera.fovY) * 0.5f);
 
+    // Scale factor for visual representation
+    double visualScale = 500.0;  // Increase this to make black hole bigger
+    double scaledRS = SagA.r_s * visualScale;
+
     #pragma omp parallel for schedule(dynamic, 4)
     for(int y = 0; y < H; ++y) {
         for(int x = 0; x < W; ++x) {
@@ -332,7 +336,7 @@ void raytrace(vector<unsigned char>& pixels, int W, int H) {
             vec3 color(0.0f);
             if (!useGeodesics) {
                 double b = 2.0 * dot(camera.pos, dir);
-                double c0 = dot(camera.pos, camera.pos) - SagA.r_s*SagA.r_s;
+                double c0 = dot(camera.pos, camera.pos) - scaledRS*scaledRS;
                 double disc = b*b - 4.0*c0;
                 if (disc > 0.0) {
                     double t1 = (-b - sqrt(disc)) * 0.5;

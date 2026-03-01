@@ -9,8 +9,8 @@
 using namespace glm;
 
 // global vars
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 2000;
+const int HEIGHT = 1500;
 
 // functions
 
