@@ -110,8 +110,8 @@ struct Engine {
     GLuint quadVAO;
     GLuint texture;
     GLuint shaderProgram;
-    int WIDTH = 800;
-    int HEIGHT = 600;
+    int WIDTH = 2000;
+    int HEIGHT = 1500;
     float width = 100000000000.0f; // Width of the viewport in meters
     float height = 75000000000.0f; // Height of the viewport in meters
     
@@ -314,7 +314,7 @@ void raytrace(vector<unsigned char>& pixels, int W, int H) {
     float tanHalfFov = tan(radians(camera.fovY) * 0.5f);
 
     // Scale factor for visual representation
-    double visualScale = 500.0;  // Increase this to make black hole bigger
+    double visualScale = 5000.0;  // Increase this to make black hole bigger
     double scaledRS = SagA.r_s * visualScale;
 
     #pragma omp parallel for schedule(dynamic, 4)

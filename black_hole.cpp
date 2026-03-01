@@ -168,8 +168,8 @@ struct Engine {
 
     int WIDTH = 2000;  // Window width
     int HEIGHT = 1500; // Window height
-    int COMPUTE_WIDTH  = 2000;   // Compute resolution width
-    int COMPUTE_HEIGHT = 1500;  // Compute resolution height
+    int COMPUTE_WIDTH  = 800;   // Compute resolution width
+    int COMPUTE_HEIGHT = 600;  // Compute resolution height
     float width = 100000000000.0f; // Width of the viewport in meters
     float height = 75000000000.0f; // Height of the viewport in meters
     
@@ -463,8 +463,8 @@ struct Engine {
     }
     void dispatchCompute(const Camera& cam) {
         // determine target compute‐res
-        int cw = cam.moving ? COMPUTE_WIDTH  : 2000;
-        int ch = cam.moving ? COMPUTE_HEIGHT : 1500;
+        int cw = cam.moving ? COMPUTE_WIDTH  : 800;
+        int ch = cam.moving ? COMPUTE_HEIGHT : 600;
 
         // 1) reallocate the texture if needed
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -479,7 +479,7 @@ struct Engine {
 
         // 2) bind compute program & UBOs
         glUseProgram(computeProgram);
-        uploadCameraUBO(cam);
+        uploadCameraUBO(cam, cw, ch);
         uploadDiskUBO();
         uploadObjectsUBO(objects);
 
@@ -516,6 +516,34 @@ struct Engine {
         data.forward = fwd;
         data.tanHalfFov = tan(radians(60.0f * 0.5f));
         data.aspect = float(WIDTH) / float(HEIGHT);
+        data.moving = cam.dragging || cam.panning;
+
+        glBindBuffer(GL_UNIFORM_BUFFER, cameraUBO);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(UBOData), &data);
+    }
+    void uploadCameraUBO(const Camera& cam, int computeW, int computeH) {
+        struct UBOData {
+            vec3 pos; float _pad0;
+            vec3 right; float _pad1;
+            vec3 up; float _pad2;
+            vec3 forward; float _pad3;
+            float tanHalfFov;
+            float aspect;
+            bool moving;
+            int _pad4;
+        } data;
+        vec3 fwd = normalize(cam.target - cam.position());
+        vec3 up = vec3(0, 1, 0); // y axis is up, so disk is in x-z plane
+        vec3 right = normalize(cross(fwd, up));
+        up = cross(right, fwd);
+
+        data.pos = cam.position();
+        data.right = right;
+        data.up = up;
+        data.forward = fwd;
+        data.tanHalfFov = tan(radians(60.0f * 0.5f));
+        data.aspect = float(WIDTH) / float(HEIGHT);
+        data.aspect = float(computeW) / float(computeH); // use compute texture aspect
         data.moving = cam.dragging || cam.panning;
 
         glBindBuffer(GL_UNIFORM_BUFFER, cameraUBO);
